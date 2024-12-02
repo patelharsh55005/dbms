@@ -1,0 +1,326 @@
+no: 01
+
+CREATE TABLE s(
+    sno char(3) PRIMARY KEY,
+    sname varchar(50),
+    s_status int,
+    s_city varchar(25)
+    );
+    
+CREATE TABLE p(
+	pno char(3) PRIMARY KEY,
+    pname varchar(20),
+    color varchar(10),
+    weight float(5.2),
+    p_city varchar(25)
+	);
+    
+CREATE TABLE sp(
+	sno char(3),
+    pno char(3),
+    qty int,
+   
+    PRIMARY KEY (sno,pno)
+	);
+
+
+INSERT INTO s VALUES('s1','smith', 20, 'london');
+INSERT INTO s VALUES('s2','jones', 10, 'peris');
+INSERT INTO s VALUES('s3','black', 30, 'paris');
+INSERT INTO s VALUES('s4','clark', 20, 'london');
+INSERT INTO s VALUES('s5',adams'', 30, 'india');
+
+INSERT INTO p VALUES('p1','nut','red',12, 'london');
+INSERT INTO p VALUES('p2','bolt', 'green', 17, 'paris');
+INSERT INTO p VALUES('p3','screw', 'blue',14, 'uk');
+INSERT INTO p VALUES('p4','screw', 'red',14, 'london');
+INSERT INTO p VALUES('p5','cam', 'blue',12, 'paris');
+INSERT INTO p VALUES('p6','cam', 'red', 19,'london');
+
+INSERT INTO sp VALUES ('s1', 'p1', 300);
+INSERT INTO sp VALUES ('s1', 'p2', 400);
+INSERT INTO sp VALUES ('s1', 'p3', 100);
+INSERT INTO sp VALUES ('s1', 'p4', 200);
+INSERT INTO sp VALUES ('s1', 'p5', 100);
+INSERT INTO sp VALUES ('s1', 'p6', 600);
+INSERT INTO sp VALUES ('s2', 'p1', 700);
+INSERT INTO sp VALUES ('s2', 'p2', 200);
+INSERT INTO sp VALUES ('s3', 'p2', 300);
+INSERT INTO sp VALUES ('s4', 'p2', 300);
+INSERT INTO sp VALUES ('s4', 'p4', 700);
+INSERT INTO sp VALUES ('s4', 'p5', 800);
+
+
+
+INSERT INTO `p` (`pno`, `pname`, `color`, `weight`, `p_city`) VALUES ('p1', 'nut', 'red', '12', 'london'), ('p2', 'bolt', 'green', '17', 'paris'), ('p3', 'screw', 'blue', '14', 'uk'), ('p4', 'screw', 'red', '14', 'london'), ('p5', 'cam', 'blue', '12', 'paris'), ('p6', 'cam', 'red', '19', 'london');
+
+
+INSERT INTO `sp` (`sno`, `pno`, `qty`) VALUES ('s1', 'p1', '300'), ('s1', 'p2', '400'), ('s1', 'p3', '100'), ('s1', 'p4', '200'), ('s1', 'p5', '100'), ('s1', 'p6', '600'), ('s2', 'p1', '700'), ('s2', 'p2', '200'), ('s3', 'p2', '300'), ('s4', 'p2', '300'), ('s4', 'p4', '700'), ('s4', 'p5', '800');
+
+no: 02
+
+1. show all parts located at London city.
+
+SELECT * FROM P WHERE P_CITY = "LONDON"; 
+
+2. show maximum weight part name.
+
+SELECT WEIGHT, pname FROM p ORDER BY weight DESC LIMIT 1;
+SELECT weight,pname FROM p WHERE weight = (SELECT MAX(weight) FROM p);
+
+3. show all parts name, part number for part color is "red" supply.
+
+SELECT pno, pname FROM p WHERE color= "red";
+
+4. show supplier name, supplier city who supply part qty more then 200.
+
+SELECT s.sname , s.s_city FROM s,sp WHERE s.sno = sp.sno and sp.qty > 200;
+
+5. show second highest weight for part.
+
+SELECT * FROM P ORDER BY p.weight DESC LIMIT 1 OFFSET 1;
+
+
+no.03
+
+6.
+
+SELECT sno, qty FROM sp WHERE pno = (SELECT pno FROM p ORDER by weight DESC LIMIT 1);
+
+7.
+
+SELECT s.sname, sp.qty, p.color FROM s,sp,p WHERE s.sno=sp.sno AND p.pno=sp.pno AND p.color = "red";
+
+8.
+
+SELECT s.sname, p.p_city, sp.qty FROM s, p, sp WHERE s.sno=sp.sno AND p.pno=sp.pno AND s_status<30;
+
+9.
+SELECT s.sno, s.sname, SUM(qty) as "QTY" FROM sp, s WHERE s.sno=sp.sno GROUP BY sname;
+
+10.
+SELECT p.pno, p.pname, SUM(qty) AS "QTY" FROM p,sp WHERE p.pno=sp.pno GROUP BY pname;
+
+
+no.04
+
+11.
+
+SELECT p.pno, p.pname, SUM(qty) AS "QTY" FROM p,sp WHERE p.pno=sp.pno GROUP BY pname;
+
+12.
+SELECT s.sno, s.sname, sp.qty FROM sp,s WHERE sp.sno=s.sno AND s.sno<'s4' GROUP BY s.sname;
+SELECT s.sno, s.sname, sum(qty) FROM sp,s WHERE sp.sno=s.sno AND s.sno<'s4' GROUP BY s.sno, s.sname;
+
+13.
+SELECT s.sno, s.sname,s.s_status, sp.qty FROM sp,s WHERE sp.sno=s.sno AND s.s_status=20 GROUP BY s.sname;
+
+
+no.05
+
+create table dept
+(
+    	dept_id int PRIMARY KEY,
+        dept_name varchar(20),
+    	dept_location varchar(20)
+    	
+    );
+
+
+create table emp
+(
+	emp_id int primary key,
+	emp_name varchar2(35),
+	emp_dept_id int,
+	emp_boss_id int,
+	emp_salary long,
+ 	FOREIGN KEY (emp_dept_id) REFERENCES Persons(dept_id)
+);
+
+
+
+insert into dept values(1,'Computer','Ahmedabad');
+insert into dept values(2,'Micro Biology','Sadra');
+insert into dept values(3,'Managment','Randheja');
+insert into dept values(4,'Main Office','Ahmedabad');
+
+
+insert into emp values(101,'Nikhil',1,401,200000);
+insert into emp values(102,'Satish',1,101,210000);
+insert into emp values(103,'Vrushali',1,101,175000);
+insert into emp values(201,'Archana',2,401,200000);
+insert into emp values(202,'Tanvi',2,201,135000);
+insert into emp values(203,'Dharti',2,201,175000);
+insert into emp values(301,'Hemali',3,401,235000);
+insert into emp values(302,'Vishal',3,301,180000);
+insert into emp values(303,'Gautam',3,301,199000);
+insert into emp values(401,'Registrar',4,401,500000);
+insert into emp values(402,'Bipin',4,401,490000);
+insert into emp values(403,'Narendra',4,402,1000000);
+insert into emp values(404,'Mohan',4,402,800000);	
+
+
+
+01.
+
+SELECT emp.emp_name as "Emp name",dept.dept_name as "Dept name",boss_emp.emp_name as "Boss emp name" ,boss_dept.dept_name as "Boss dept name" 
+FROM emp,emp as boss_emp,dept,dept as boss_dept
+where boss_emp.emp_id=emp.emp_boss_id and dept.dept_id=emp.emp_dept_id and boss_emp.emp_dept_id=boss_dept.dept_id;
+
+02.
+
+SELECT emp.emp_name as "Emp name",dept.dept_name as "Dept name",boss_emp.emp_name as "Boss emp name" ,boss_dept.dept_name as "Boss dept name" 
+FROM emp,emp as boss_emp,dept,dept as boss_dept
+where boss_emp.emp_id=emp.emp_boss_id and dept.dept_id=emp.emp_dept_id and boss_emp.emp_dept_id=boss_dept.dept_id 
+and emp.salary > boss_emp.salary;
+
+no. 07
+
+01.
+SELECT DISTINCT dept_name,max(salary) as "salary" from dept,emp where dept.dept_id=emp.emp_dept_id GROUP by dept_name;
+
+02.
+SELECT DISTINCT dept_name,count(emp_dept_id) as "Emp_dept" from dept,emp where dept.dept_id=emp.emp_dept_id GROUP by emp_dept_id;
+
+
+
+
+
+-------------pract practice---------------------------------------------------------------
+
+table 01:
+
+CREATE TABLE s(
+	sno char(3) PRIMARY KEY,
+    sname varchar(50),
+    s_status int
+    s_city varchar(25)
+);
+    
+CREATE TABLE p(
+	pno char(3) PRIMARY KEY,
+    pname varchar(20),
+    color varchar(10),
+    weight float(5.2),
+    p_city varchar(25)
+	);
+    
+CREATE TABLE sp(
+	sno char(3),
+    pno char(3),
+    qty int,
+    PRIMARY KEY(sno,pno),
+    foreign key(sno) references s(sno),
+    foreign key(pno) references p(pno)
+   
+	);
+
+01. SELECT * FROM P WHERE P_CITY = "LONDON"; 
+02. SELECT weight,pname FROM p WHERE weight = (SELECT MAX(weight) FROM p);
+03. SELECT pname, pno FROM p WHERE color='red';
+04. SELECT sname, s_city,qty FROM s,sp WHERE s.sno=sp.sno AND sp.qty >200;
+05. SELECT *FROM p ORDER BY p.weight DESC LIMIT 1 OFFSET 1;
+06. SELECT sno, qty FROM sp WHERE pno = (SELECT pno FROM p ORDER by weight DESC LIMIT 1);
+07. SELECT s.sname, sp.qty, p.color FROM s,sp,p WHERE s.sno=sp.sno AND p.pno=sp.pno AND p.color = "red";
+08. SELECT s.sname, p.p_city, sp.qty FROM s, p, sp WHERE s.sno=sp.sno AND p.pno=sp.pno AND s_status<30;
+09. SELECT s.sno, s.sname, SUM(qty) as "QTY" FROM sp, s WHERE s.sno=sp.sno GROUP BY sname;
+10. SELECT p.pno, p.pname, SUM(qty) AS "QTY" FROM p,sp WHERE p.pno=sp.pno GROUP BY pname;
+11. SELECT p.pno, p.pname, SUM(qty) AS "QTY" FROM p,sp WHERE p.pno=sp.pno GROUP BY pname;
+12. SELECT s.sno, s.sname, sum(qty) FROM sp,s WHERE sp.sno=s.sno AND s.sno<'s4' GROUP BY s.sno, s.sname;
+13. SELECT s.sno, s.sname,s.s_status, sp.qty FROM sp,s WHERE sp.sno=s.sno AND s.s_status=20 GROUP BY s.sname;
+
+table 02: 
+
+create table dept(
+    	dept_id int PRIMARY KEY,
+        dept_name varchar(20),
+    	dept_location varchar(20)
+    	);
+
+
+create table emp(
+	emp_id int primary key,
+	emp_name varchar2(35),
+	emp_dept_id int,
+	emp_boss_id int,
+	emp_salary long,
+ 	FOREIGN KEY (emp_dept_id) REFERENCES Persons(dept_id)
+	);
+
+
+insert into dept values(1,'Computer','Ahmedabad');
+insert into dept values(2,'Micro Biology','Sadra');
+insert into dept values(3,'Managment','Randheja');
+insert into dept values(4,'Main Office','Ahmedabad');
+
+
+insert into emp values(101,'Nikhil',1,401,200000);
+insert into emp values(102,'Satish',1,101,210000);
+insert into emp values(103,'Vrushali',1,101,175000);
+insert into emp values(201,'Archana',2,401,200000);
+insert into emp values(202,'Tanvi',2,201,135000);
+insert into emp values(203,'Dharti',2,201,175000);
+insert into emp values(301,'Hemali',3,401,235000);
+insert into emp values(302,'Vishal',3,301,180000);
+insert into emp values(303,'Gautam',3,301,199000);
+insert into emp values(401,'Registrar',4,401,500000);
+insert into emp values(402,'Bipin',4,401,490000);
+insert into emp values(403,'Narendra',4,402,1000000);
+insert into emp values(404,'Mohan',4,402,800000);
+
+
+01. SELECT emp.emp_name as "Emp name",dept.dept_name as "Dept name",boss_emp.emp_name as "Boss emp name" ,boss_dept.dept_name as "Boss dept name" 
+FROM emp,emp as boss_emp,dept,dept as boss_dept
+where boss_emp.emp_id=emp.emp_boss_id and dept.dept_id=emp.emp_dept_id and boss_emp.emp_dept_id=boss_dept.dept_id;
+
+02. SELECT emp.emp_name as "Emp name",dept.dept_name as "Dept name",boss_emp.emp_name as "Boss emp name" ,boss_dept.dept_name as "Boss dept name" 
+FROM emp,emp as boss_emp,dept,dept as boss_dept
+where boss_emp.emp_id=emp.emp_boss_id and dept.dept_id=emp.emp_dept_id and boss_emp.emp_dept_id=boss_dept.dept_id 
+and emp.salary > boss_emp.salary;
+
+03. SELECT DISTINCT dept_name,max(salary) as "salary" from dept,emp where dept.dept_id=emp.emp_dept_id GROUP by dept_name;
+
+04. SELECT DISTINCT dept_name,count(emp_dept_id) as "Emp_dept" from dept,emp where dept.dept_id=emp.emp_dept_id GROUP by emp_dept_id;
+
+05. SELECT dept.dept_name, MAX(emp.emp_salary) AS max_salary FROM dept,emp WHERE dept.dept_id = emp.emp_dept_id GROUP BY dept.dept_name;
+
+06. SELECT dept.dept_name, COUNT(emp.emp_name) AS total_employee FROM dept,emp WHERE dept.dept_id=emp.emp_dept_id GROUP BY dept.dept_name;	
+
+
+08.
+CREATE TABLE account
+(
+    acc_no int,
+    amount decimal(10,2)
+    );
+
+
+09.
+set @sum=0;
+insert into account values(2,300.00),(3,400.00),(5,-200.00);
+select @sum;
+
+
+10. create trigger that make sum of amount inserted in table to credit and debit according to amount + or -.
+
+
+CREATE TRIGGER ins_transaction 
+BEFORE INSERT on account 
+FOR EACH ROW precedes ins_sum 
+SET @deposite = @deposite + IF(new.amount >0, new.amount,0),
+ @withdraw = @withdraw + IF(new.amount <0, -new.amount,0);
+
+
+SET @sum=0;
+SET @deposite=0;
+SET @withdraw=0;
+
+INSERT INTO account VALUES(1,1500), (2,2500.00), (3,1000.00), (4,-2000);
+SELECT @deposite as "deposite", @withdraw as "withdraw", @sum as "total"
+
+
+
+
+create TRIGGER ins_sum before insert on account
+for each row set @sum=@sum+new.amount;
+
