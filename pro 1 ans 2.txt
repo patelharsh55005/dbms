@@ -237,3 +237,33 @@ INSERT INTO transactions (amount) VALUES (0);
 
 
 
+
+
+
+
+
+
+
+mysql -u root                                                                    my sql -u root
+
+use harsh                                                                         use harsh
+
+lock tables p write;                                                 select * from p;
+
+unlock tables;                                                        select * from p;
+lock tables p read;                                                   update p set weight=1 where pno='p1'; 	
+unlock tables;                                                        lock tables s write;
+lock tables p write;                                                   lock tables p write;
+lock table s write;
+
+
+
+
+
+
+
+
+
+
+
+
